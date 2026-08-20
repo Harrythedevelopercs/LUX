@@ -1,2 +1,16 @@
-import type { ReactNode } from "react";import {redirect} from "next/navigation";import {requireAdmin} from "@/lib/auth";import {AdminSidebar} from "@/components/AdminSidebar";
-export default async function AdminLayout({children}:{children:ReactNode}){try{await requireAdmin()}catch{redirect("/admin/login")}return <div className="adminShell"><AdminSidebar/><main className="adminMain">{children}</main></div>}
+import type { ReactNode } from "react";
+import {redirect} from "next/navigation";
+import {requireAdmin} from "@/lib/auth";
+import {AdminSidebar} from "@/components/AdminSidebar";
+
+export const dynamic = "force-dynamic";
+
+export default async function AdminLayout({children}:{children:ReactNode}){
+  try{
+    await requireAdmin();
+  }catch{
+    redirect("/admin/login");
+  }
+  return <div className="adminShell"><AdminSidebar/><main className="adminMain">{children}</main></div>;
+}
+

@@ -1,7 +1,10 @@
 import {prisma} from "@/lib/db";
 import {BlockForm} from "./BlockForm";
 
+export const dynamic = "force-dynamic";
+
 export default async function Calendar(){
+
   const start = new Date();
   const end = new Date(start.getTime() + 14 * 86400000);
   const vehicles = await prisma.vehicle.findMany({

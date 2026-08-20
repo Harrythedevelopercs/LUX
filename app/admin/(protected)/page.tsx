@@ -1,2 +1,57 @@
-import {prisma} from "@/lib/db";import {BookingStatus,PaymentStatus} from "@/generated/prisma/enums";import {formatMoney} from "@/lib/money";
-export default async function AdminDashboard(){const now=new Date(),tomorrow=new Date(now.getTime()+86400000);const [vehicles,upcoming,active,revenue,recent]=await Promise.all([prisma.vehicle.count({where:{active:true}}),prisma.booking.count({where:{startAt:{gte:now},status:{in:[BookingStatus.CONFIRMED,BookingStatus.PAID]}}}),prisma.booking.count({where:{status:BookingStatus.IN_PROGRESS}}),prisma.booking.aggregate({_sum:{amountPaidCents:true},where:{paymentStatus:{in:[PaymentStatus.PAID,PaymentStatus.PARTIALLY_PAID]}}}),prisma.booking.findMany({orderBy:{createdAt:"desc"},take:8,include:{vehicle:true}})]);return <><div className="eyebrow">Operations overview</div><h1>Dashboard</h1><div className="grid metrics"><div className="metric"><span className="muted">Fleet</span><strong>{vehicles}</strong></div><div className="metric"><span className="muted">Upcoming</span><strong>{upcoming}</strong></div><div className="metric"><span className="muted">Active Rentals</span><strong>{active}</strong></div><div className="metric"><span className="muted">Collected</span><strong>{formatMoney(revenue._sum.amountPaidCents||0)}</strong></div></div><section className="section"><h2>Recent bookings</h2><div className="tableWrap"><table><thead><tr><th>Reference</th><th>Vehicle</th><th>Pickup</th><th>Status</th><th>Payment</th></tr></thead><tbody>{recent.map(b=><tr key={b.id}><td>{b.reference}</td><td>{b.vehicle.make} {b.vehicle.model}</td><td>{b.startAt.toLocaleString()}</td><td><span className="pill">{b.status}</span></td><td>{b.paymentStatus}</td></tr>)}</tbody></table></div></section></>}
+import {prisma} from "@/lib/db";
+import {BookingStatus,PaymentStatus} from "@/generated/prisma/enums";
+import {formatMoney} from "@/lib/money";
+
+export const dynamic = "force-dynamic";
+
+export default async function AdminDashboard(){
+  const now = new Date();
+  const [vehicles,upcoming,active,revenue,recent] = await Promise.all([
+    prisma.vehicle.count({where:{active:true}}),
+    prisma.booking.count({where:{startAt:{gte:now},status:{in:[BookingStatus.CONFIRMED,BookingStatus.PAID]}}}),
+    prisma.booking.count({where:{status:BookingStatus.IN_PROGRESS}}),
+    prisma.booking.aggregate({_sum:{amountPaidCents:true},where:{paymentStatus:{in:[PaymentStatus.PAID,PaymentStatus.PARTIALLY_PAID]}}}),
+    prisma.booking.findMany({orderBy:{createdAt:"desc"},take:8,include:{vehicle:true}})
+  ]);
+
+  return (
+    <>
+      <div className="eyebrow">Operations overview</div>
+      <h1>Dashboard</h1>
+      <div className="grid metrics">
+        <div className="metric"><span className="muted">Fleet</span><strong>{vehicles}</strong></div>
+        <div className="metric"><span className="muted">Upcoming</span><strong>{upcoming}</strong></div>
+        <div className="metric"><span className="muted">Active Rentals</span><strong>{active}</strong></div>
+        <div className="metric"><span className="muted">Collected</span><strong>{formatMoney(revenue._sum.amountPaidCents||0)}</strong></div>
+      </div>
+      <section className="section">
+        <h2>Recent bookings</h2>
+        <div className="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Reference</th>
+                <th>Vehicle</th>
+                <th>Pickup</th>
+                <th>Status</th>
+                <th>Payment</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recent.map(b => (
+                <tr key={b.id}>
+                  <td>{b.reference}</td>
+                  <td>{b.vehicle.make} {b.vehicle.model}</td>
+                  <td>{b.startAt.toLocaleString()}</td>
+                  <td><span className="pill">{b.status}</span></td>
+                  <td>{b.paymentStatus}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </>
+  );
+}
+

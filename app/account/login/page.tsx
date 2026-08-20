@@ -1,0 +1,1 @@
+import {SiteNav} from "@/components/SiteNav";import {CustomerAuth} from "./CustomerAuth";export default function CustomerLogin(){return <><SiteNav/><main className="container section"><div className="loginBox" style={{margin:"20px auto"}}><div className="eyebrow">Customer account</div><h1>Sign in or create an account</h1><CustomerAuth/></div></main></>}

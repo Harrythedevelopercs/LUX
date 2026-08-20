@@ -1,0 +1,1 @@
+import Link from "next/link";export function AdminSidebar(){return <aside className="sidebar"><div className="brand">APEX OPERATIONS</div><nav><Link href="/admin">Dashboard</Link><Link href="/admin/bookings">Bookings</Link><Link href="/admin/vehicles">Fleet</Link><Link href="/admin/calendar">Calendar</Link><Link href="/">Public Site</Link></nav></aside>}

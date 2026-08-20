@@ -1,0 +1,1 @@
+import {NextResponse} from "next/server";import {expireOldHolds} from "@/lib/holds";export async function POST(req:Request){if(!process.env.CRON_SECRET||req.headers.get("authorization")!==`Bearer ${process.env.CRON_SECRET}`)return NextResponse.json({error:"unauthorized"},{status:401});const r=await expireOldHolds();return NextResponse.json({expired:r.count})}

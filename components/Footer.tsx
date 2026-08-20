@@ -1,0 +1,1 @@
+export function Footer(){return <footer className="footer"><div className="container">Apex Exotic Rentals · Production-ready booking platform starter. Rental terms and eligibility rules require business/legal review before launch.</div></footer>}

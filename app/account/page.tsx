@@ -1,0 +1,3 @@
+import Link from "next/link";import {SiteNav} from "@/components/SiteNav";import {BookingLookup} from "./BookingLookup";
+export const metadata={title:"My Booking"};
+export default function Account(){return <><SiteNav/><main className="container section"><div className="eyebrow">Customer portal</div><h2>Find your reservation</h2><p className="muted">Enter your booking reference and email. Full customer authentication can be enabled using the included user/session model.</p><div style={{display:"flex",gap:8,margin:"18px 0"}}><Link className="btn primary" href="/account/login">Customer Sign In</Link><Link className="btn" href="/account/dashboard">Account Dashboard</Link></div><BookingLookup/></main></>}
